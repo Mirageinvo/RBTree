@@ -1,11 +1,11 @@
 #include <iostream>
-#include "../includes/rbtree.hpp"
+#include "rbtree_impl.hpp"
 
 int main() {
     char sign;
-    RBTree<int> tr;
-    while (!std::cin.eof()) {
-        std::cin >> sign;
+    Trees::RBTree<int> tr;
+    std::cin >> sign;
+    /*while (!std::cin.eof()) {
         if (sign == 'k') {
             
         }
@@ -18,6 +18,7 @@ int main() {
         else {
             std::cout << "Unknown command" << std::endl;
         }
-    }
+        std::cin >> sign;
+    }*/
     return 0;
 }
