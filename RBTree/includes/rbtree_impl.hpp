@@ -116,6 +116,7 @@ namespace Trees {
 		delete nil_;
 	}
 
-}
 
+
+}
 #endif // RBTREE_INCLUDES_RBTREE_IMPL
