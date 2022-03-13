@@ -36,6 +36,9 @@ namespace Trees {
 		node<T>* head_;
 		bool fix_tree(node<T>* init);
 		node<T>* grandfather(node<T>* init);
+		node<T>* uncle(node<T>* init);
+		void rotate_left(node<T>* init);
+		void rotate_right(node<T>* init);
 	};
 }
 

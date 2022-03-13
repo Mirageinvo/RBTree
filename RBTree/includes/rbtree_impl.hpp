@@ -152,16 +152,109 @@ namespace Trees {
 	}
 
 	template<typename T>
+	node<T>* RBTree<T>::uncle(node<T>* init) {
+		node<T> grdf = grandfather(init);
+		if (grdf == nullptr) {
+			return nullptr;
+		}
+		if (init->parent == grdf->left) {
+			return grdf->right;
+		}
+		else {
+			return grdf->left;
+		}
+	}
+
+	template<typename T>
+	void RBTree<T>::rotate_left(node<T>* init) {
+		assert(init != head_); // && init == init->parent->right
+		if (init->parent == head_) {
+			init->parent->right = init->left;
+			init->parent->parent = init;
+			init->left = init->parent;
+			init->parent = nullptr;
+			head_ = init;
+		}
+		else {
+			node<T>* grnd = grandfather(init);
+			init->parent->right = init->left;
+			init->parent->parent = init;
+			init->left = init->parent;
+			init->parent = grnd;
+		}
+		init->left->num_of_greater = init->num_of_less;
+		init->num_of_less = init->left->num_of_greater + init->left->num_of_less + 1;
+	}
+
+	template<typename T>
+	void RBTree<T>::rotate_right(node<T>* init) {
+		assert(init != head_); // && init == init->parent->left
+		if (init->parent == head_) {
+			init->parent->left = init->right;
+			init->parent->parent = init;
+			init->right = init->parent;
+			init->parent = nullptr;
+			head_ = init;
+		}
+		else {
+			node<T>* grnd = grandfather(init);
+			init->parent->left = init->right;
+			init->parent->parent = init;
+			init->right = init->parent;
+			init->parent = grnd;
+		}
+		init->right->num_of_less = init->num_of_greater;
+		init->num_of_greater = init->right->num_of_greater + init->right->num_of_less + 1;
+	}
+
+	template<typename T>
 	bool RBTree<T>::fix_tree(node<T>* init) {
 		if (init == head_) {
 			init->color = BLACK;
 			return true;
 		}
 		else if (init->parent == head_) {
-
+			return true;//////////////???????????????????????? mb ok
 		}
 		else {
-
+			if (init->parent->color == BLACK) {
+				return true;
+			}
+			else { //if color of parent is red, it means that parent is not a root
+				node<T>* unc = uncle(init);
+				if (unc->color == RED) {
+					unc->color = BLACK;
+					init->parent->color = BLACK;
+					init->parent->parent = RED;
+					return false;
+				}
+				else {
+					if (init->parent == init->parent->parent->left) {
+						if (init == init->parent->right) {
+							rotate_left(init);
+						}
+						else {
+							init = init->parent;
+						}
+						assert(init->left->color == RED && init->parent->color == BLACK);
+						rotate_right(init);
+						init->color = BLACK;
+						init->right->color = RED;
+					}
+					else {
+						if (init == init->parent->left) {
+							rotate_right(init);
+						}
+						else {
+							init = init->parent;
+						}
+						assert(init->right->color == RED && init->parent->color == BLACK);
+						rotate_left(init);
+						init->color = BLACK;
+						init->left->color = RED;
+					}
+				}
+			}
 		}
 	}
 
