@@ -3,22 +3,25 @@
 
 int main() {
     char sign;
-    Trees::RBTree<int> tr;
+    int num;
+    Trees::RBTree<int> tree;
     std::cin >> sign;
-    /*while (!std::cin.eof()) {
+    while (!std::cin.eof()) {
         if (sign == 'k') {
-            
+            std::cin >> num;
+            tree.insert(num);
         }
-        else if (sign == 'm') {
+        /*else if (sign == 'm') {
 
         }
         else if (sign == 'n') {
 
-        }
+        }*/
         else {
-            std::cout << "Unknown command" << std::endl;
+            //std::cout << "Unknown command" << std::endl;
+            return 0;
         }
         std::cin >> sign;
-    }*/
+    }
     return 0;
 }
