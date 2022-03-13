@@ -45,47 +45,53 @@ namespace Trees {
 
 	template<typename T>
 	RBTree<T>::RBTree(const RBTree& another) {
-		if (another.head_ == nullptr || another.head_ == another.nil_) {
-			return RBTree();
+		if (another.head_ == nullptr) {
+			head_ = nil_ = nullptr;
 		}
-		nil_ = new node<T>;
-		head_ = new node<T>;
-		head_->left = nil_;
-		head_->right = nil_;
-		*head_ = *another.head_;
-		node<T>* cur1 = head_;
-		node<T>* cur2 = another.head_;
-		while (true) {
-			while (cur2->left != nil_ && cur1->left == nil_) {
-				cur2 = cur2->left;
-				assert(cur1->left != nullptr);
-				cur1->left = new node<T>;
-				*cur1->left = *cur2;
-				cur1->left->parent = cur1;
-				cur1->left->left = nil_;
-				cur1->left->right = nil_;
-				cur1 = cur1->left;
-			}
-			while (cur2->right != nil_ && cur1->right == nil_) {
-				cur2 = cur2->right;
-				assert(cur1->right != nullptr);
-				cur1->right = new node<T>;
-				*cur1->right = *cur2;
-				cur1->right->parent = cur1;
-				cur1->right->left = nil_;
-				cur1->right->right = nil_;
-				cur1 = cur1->right;
-			}
-			if (cur2 != another.head_) {
-				cur1 = cur1->parent;
-				cur2 = cur2->parent;
-			}
-			else {
-				if ((cur2->left == another.nil_ && cur1->left == nil_ && cur2->right == another.nil_ && cur1->right == nil_) ||
-					(cur2->left == another.nil_ && cur1->left == nil_ && cur2->right != another.nil_ && cur1->right != nil_) ||
-					(cur2->left != another.nil_ && cur1->left != nil_ && cur2->right == another.nil_ && cur1->right == nil_) ||
-					(cur2->left != another.nil_ && cur1->left != nil_ && cur2->right != another.nil_ && cur1->right != nil_)) {
-					break;
+		else if (another.head_ == another.nil_) {
+			nil_ = new node<T>;
+			head_ = nil_;
+		}
+		else {
+			nil_ = new node<T>;
+			head_ = new node<T>;
+			head_->left = nil_;
+			head_->right = nil_;
+			*head_ = *another.head_;
+			node<T>* cur1 = head_;
+			node<T>* cur2 = another.head_;
+			while (true) {
+				while (cur2->left != nil_ && cur1->left == nil_) {
+					cur2 = cur2->left;
+					assert(cur1->left != nullptr);
+					cur1->left = new node<T>;
+					*cur1->left = *cur2;
+					cur1->left->parent = cur1;
+					cur1->left->left = nil_;
+					cur1->left->right = nil_;
+					cur1 = cur1->left;
+				}
+				while (cur2->right != nil_ && cur1->right == nil_) {
+					cur2 = cur2->right;
+					assert(cur1->right != nullptr);
+					cur1->right = new node<T>;
+					*cur1->right = *cur2;
+					cur1->right->parent = cur1;
+					cur1->right->left = nil_;
+					cur1->right->right = nil_;
+					cur1 = cur1->right;
+				}
+				if (cur2 != another.head_) {
+					cur1 = cur1->parent;
+					cur2 = cur2->parent;
+				}
+				else {
+					if ((cur2->left == another.nil_ && cur1->left == nil_ && cur2->right == another.nil_ && cur1->right == nil_) ||
+						(cur2->left == another.nil_ && cur1->left == nil_ && cur2->right != another.nil_ && cur1->right != nil_) ||
+						(cur2->left != another.nil_ && cur1->left != nil_ && cur2->right == another.nil_ && cur1->right == nil_) ||
+						(cur2->left != another.nil_ && cur1->left != nil_ && cur2->right != another.nil_ && cur1->right != nil_)) {
+						break;
+					}
 				}
 			}
 		}
@@ -97,7 +103,6 @@ namespace Trees {
 		nil_ = another.nil_;
 		another.head_ = nullptr;
 		another.nil_ = nullptr;
-		return *this;
 	}
 
 	template<typename T>
@@ -253,6 +258,7 @@ namespace Trees {
 						init->color = BLACK;
 						init->left->color = RED;
 					}
+					return true;
 				}
 			}
 		}
