@@ -9,7 +9,6 @@ namespace Trees {
 		node(int col = BLACK);
 		node(const node& another);
 		~node();
-		node& operator=(const node& another);
 
 		int color;
 		size_t num_of_less;

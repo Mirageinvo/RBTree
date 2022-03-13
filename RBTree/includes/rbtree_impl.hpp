@@ -8,7 +8,7 @@
 namespace Trees {
 
 	template<typename T>
-	node<T>::node(int col) : color(col), num_of_less(0), num_of_greater(0), left(nullptr), right(nullptr), parent(nullptr), data(nullptr) {}
+	node<T>::node(int col) : color(col), num_of_less(0), num_of_greater(0), left(nullptr), right(nullptr), parent(nullptr), data(new T) {}
 
 	template<typename T>
 	node<T>::node(const node& another) : left(nullptr), right(nullptr), parent(nullptr) {
@@ -21,23 +21,7 @@ namespace Trees {
 
 	template<typename T>
 	node<T>::~node() {
-		delete left;
-		delete right;
-		delete parent;
-		delete[] data;
-	}
-
-	template<typename T>
-	node<T>& node<T>::operator=(const node& another) {
-		if (this == &another) {
-			return *this;
-		}
-		color = another.color;
-		num_of_less = another.num_of_less;			//left, right, parent pointers aren't changed
-		num_of_greater = another.num_of_greater;    //it is made for implementation purposes
-		data = new T;
-		*data = *another.data;
-		return *this;
+		delete data;
 	}
 
 	template<typename T>
@@ -55,9 +39,11 @@ namespace Trees {
 		else {
 			nil_ = new node<T>;
 			head_ = new node<T>;
+			*head_ = *another.head_;//////////= doesn't work
+			head_->data = new T;
+			*head_->data = *another.head_->data;
 			head_->left = nil_;
-			head_->right = nil_;
-			*head_ = *another.head_;
+			head_->right = nil_;//head_->parent = nullptr;
 			node<T>* cur1 = head_;
 			node<T>* cur2 = another.head_;
 			while (true) {
@@ -66,6 +52,8 @@ namespace Trees {
 					assert(cur1->left != nullptr);
 					cur1->left = new node<T>;
 					*cur1->left = *cur2;
+					cur1->left->data = new T;
+					*cur1->left->data = *cur2->data;
 					cur1->left->parent = cur1;
 					cur1->left->left = nil_;
 					cur1->left->right = nil_;
@@ -75,7 +63,9 @@ namespace Trees {
 					cur2 = cur2->right;
 					assert(cur1->right != nullptr);
 					cur1->right = new node<T>;
-					*cur1->right = *cur2;
+					*cur1->right = *cur2;///////////////////= doesn't work?????????????
+					cur1->right->data = new T;
+					*cur1->right->data = *cur2->data;
 					cur1->right->parent = cur1;
 					cur1->right->left = nil_;
 					cur1->right->right = nil_;
@@ -121,11 +111,13 @@ namespace Trees {
 				cur = cur->parent;
 				delete tmp;
 			}
-			else if ((cur->left == nullptr || cur->left == nil_) && (cur->right != nullptr && cur->right != nil_)) {
+			else if ((cur->left == nullptr || cur->left == nil_) && (cur->right != nullptr || cur->right != nil_)) {
 				delete head_;
+				head_ = nullptr;
 			}
 		}
 		delete nil_;
+		//delete head_;
 	}
 
 	template<typename T>
@@ -158,7 +150,7 @@ namespace Trees {
 
 	template<typename T>
 	node<T>* RBTree<T>::uncle(node<T>* init) {
-		node<T> grdf = grandfather(init);
+		node<T>* grdf = grandfather(init);
 		if (grdf == nullptr) {
 			return nullptr;
 		}
@@ -230,7 +222,7 @@ namespace Trees {
 				if (unc->color == RED) {
 					unc->color = BLACK;
 					init->parent->color = BLACK;
-					init->parent->parent = RED;
+					init->parent->parent->color = RED;
 					return false;
 				}
 				else {
@@ -266,7 +258,7 @@ namespace Trees {
 
 	template<typename T>
 	void RBTree<T>::insert(T el) {
-		if (head_ == nil_) {
+		if (head_ == nil_) {// == nil_
 			head_ = new node<T>;
 			*head_->data = el;
 			head_->left = nil_;
@@ -314,7 +306,6 @@ namespace Trees {
 				}
 				else {
 					tmp = tmp->left;
-					continue;
 				}
 			}
 		}
