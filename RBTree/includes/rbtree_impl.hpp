@@ -8,7 +8,7 @@
 namespace Trees {
 
 	template<typename T>
-	node<T>::node(int col) : color(col), num_of_less(0), num_of_greater(0), left(nullptr), right(nullptr), parent(nullptr), data(new T) {}
+	node<T>::node(int col) : color(col), num_of_less(0), num_of_greater(0), left(nullptr), right(nullptr), parent(nullptr), data(nullptr) {}
 
 	template<typename T>
 	node<T>::node(const node& another) : left(nullptr), right(nullptr), parent(nullptr) {
@@ -110,6 +110,12 @@ namespace Trees {
 				tmp = cur;
 				cur = cur->parent;
 				delete tmp;
+				if (tmp == cur->right) {
+					cur->right = nullptr;
+				}
+				else {
+					cur->left = nullptr;
+				}
 			}
 			else if ((cur->left == nullptr || cur->left == nil_) && (cur->right != nullptr || cur->right != nil_)) {
 				delete head_;
@@ -245,7 +251,7 @@ namespace Trees {
 						else {
 							init = init->parent;
 						}
-						assert(init->right->color == RED && init->parent->color == BLACK);
+						assert(init->right->color == RED && init->parent->color == BLACK);//fail
 						rotate_left(init);
 						init->color = BLACK;
 						init->left->color = RED;
@@ -258,8 +264,9 @@ namespace Trees {
 
 	template<typename T>
 	void RBTree<T>::insert(T el) {
-		if (head_ == nil_) {// == nil_
+		if (head_ == nil_) {
 			head_ = new node<T>;
+			head_->data = new T;
 			*head_->data = el;
 			head_->left = nil_;
 			head_->right = nil_;
@@ -273,6 +280,7 @@ namespace Trees {
 				tmp->num_of_greater++;
 				if (tmp->right == nil_) {
 					tmp->right = new node<T>;
+					tmp->right->data = new T;
 					*tmp->right->data = el;
 					tmp->right->left = nil_;
 					tmp->right->right = nil_;
@@ -293,6 +301,7 @@ namespace Trees {
 				tmp->num_of_less++;
 				if (tmp->left == nil_) {
 					tmp->left = new node<T>;
+					tmp->left->data = new T;
 					*tmp->left->data = el;
 					tmp->left->left = nil_;
 					tmp->left->right = nil_;
