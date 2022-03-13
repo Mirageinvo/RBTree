@@ -2,6 +2,7 @@
 #define RBTREE_INCLUDES_RBTREE_IMPL
 
 #include <cassert>
+#include <utility>
 #include "rbtree.hpp"
 
 namespace Trees {
@@ -44,10 +45,7 @@ namespace Trees {
 
 	template<typename T>
 	RBTree<T>::RBTree(const RBTree& another) {
-		if (another.head_ == nullptr) {
-			return nullptr;
-		}
-		else if (another.head_ == another.nil_) {
+		if (another.head_ == nullptr || another.head_ == another.nil_) {
 			return RBTree();
 		}
 		nil_ = new node<T>;
@@ -94,6 +92,15 @@ namespace Trees {
 	}
 
 	template<typename T>
+	RBTree<T>::RBTree(RBTree&& another) {
+		head_ = another.head_;
+		nil_ = another.nil_;
+		another.head_ = nullptr;
+		another.nil_ = nullptr;
+		return *this;
+	}
+
+	template<typename T>
 	RBTree<T>::~RBTree() {
 		node<T>* cur = head_;
 		node<T>* tmp;
@@ -116,7 +123,103 @@ namespace Trees {
 		delete nil_;
 	}
 
+	template<typename T>
+	RBTree<T>& RBTree<T>::operator=(RBTree&& another) {
+		if (this == &another) {
+			return *this;
+		}
+		delete this;
+		this->head_ = another.head_;
+		this->nil_ = another.nil_;
+		another.head_ = nullptr;
+		another.nil_ = nullptr;
+		return *this;
+	}
 
+	template<typename T>
+	RBTree<T>& RBTree<T>::operator=(const RBTree& another) {
+		if (this == &another) {
+			return *this;
+		}
+		RBTree<T> tmp(another);
+		*this = std::move(another);
+		return *this;
+	}
+
+	template<typename T>
+	node<T>* RBTree<T>::grandfather(node<T>* init) {
+		return (init->parent != nullptr && init->parent->parent != nullptr) ? init->parent->parent : nullptr;
+	}
+
+	template<typename T>
+	bool RBTree<T>::fix_tree(node<T>* init) {
+		if (init == head_) {
+			init->color = BLACK;
+			return true;
+		}
+		else if (init->parent == head_) {
+
+		}
+		else {
+
+		}
+	}
+
+	template<typename T>
+	void RBTree<T>::insert(T el) {
+		if (head_ == nil_) {
+			head_ = new node<T>;
+			*head_->data = el;
+			head_->left = nil_;
+			head_->right = nil_;
+			assert(head_->color == BLACK && head_->num_of_less == 0 && head_->num_of_greater == 0 && head_->parent == nullptr);
+			return;
+		}
+		node<T>* tmp = head_;
+		while (true) {
+			assert(el != *tmp->data);
+			if (el > *tmp->data) {
+				tmp->num_of_greater++;
+				if (tmp->right == nil_) {
+					tmp->right = new node<T>;
+					*tmp->right->data = el;
+					tmp->right->left = nil_;
+					tmp->right->right = nil_;
+					tmp->right->parent = tmp;
+					tmp->right->color = RED;
+					tmp = tmp->right;
+					while (!fix_tree(tmp)) {
+						tmp = grandfather(tmp);
+					}
+					return;
+				}
+				else {
+					tmp = tmp->right;
+					continue;
+				}
+			}
+			else {
+				tmp->num_of_less++;
+				if (tmp->left == nil_) {
+					tmp->left = new node<T>;
+					*tmp->left->data = el;
+					tmp->left->left = nil_;
+					tmp->left->right = nil_;
+					tmp->left->parent = tmp;
+					tmp->left->color = RED;
+					tmp = tmp->left;
+					while (!fix_tree(tmp)) {
+						tmp = grandfather(tmp);
+					}
+					return;
+				}
+				else {
+					tmp = tmp->left;
+					continue;
+				}
+			}
+		}
+	}
 
 }
 #endif // RBTREE_INCLUDES_RBTREE_IMPL

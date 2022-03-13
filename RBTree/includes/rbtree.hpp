@@ -10,6 +10,7 @@ namespace Trees {
 		node(const node& another);
 		~node();
 		node& operator=(const node& another);
+
 		int color;
 		size_t num_of_less;
 		size_t num_of_greater;
@@ -24,12 +25,17 @@ namespace Trees {
 	public:
 		RBTree();
 		RBTree(const RBTree& another);
-		//RBTree(RBTree&& another);
+		RBTree(RBTree&& another);
 		~RBTree();
+		RBTree& operator=(RBTree&& another);
+		RBTree& operator=(const RBTree& another);
 
+		void insert(T el);
 	private:
 		node<T>* nil_;
 		node<T>* head_;
+		bool fix_tree(node<T>* init);
+		node<T>* grandfather(node<T>* init);
 	};
 }
 
