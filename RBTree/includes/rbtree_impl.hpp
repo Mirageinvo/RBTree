@@ -377,12 +377,24 @@ namespace Trees {
 
 	template<typename T>
 	T RBTree<T>::mth_statistic(size_t stat) const {
-		size_t ans = 0;
 		if (head_->num_of_less + head_->num_of_greater + 1 < stat) {
 			return 0;
 		}
+		size_t actual_value = stat;
+		node<T>* cur = head_;
 		while (true) {
-
+			if (actual_value == cur->num_of_less + 1) {
+				return *cur->data;
+			}
+			else if (actual_value < cur->num_of_less + 1) {
+				assert(cur->left != nil_ && cur->left != nullptr);
+				cur = cur->left;
+			}
+			else {
+				assert(cur->right != nil_ && cur->right != nullptr);
+				actual_value -= cur->num_of_less + 1;
+				cur = cur->right;
+			}
 		}
 	}
 
