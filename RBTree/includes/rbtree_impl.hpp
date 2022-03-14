@@ -10,14 +10,14 @@ namespace Trees {
 	template<typename T>
 	node<T>::node(int col) : color(col), num_of_less(0), num_of_greater(0), left(nullptr), right(nullptr), parent(nullptr), data(nullptr) {}
 
-	template<typename T>
+	/*template<typename T>
 	node<T>::node(const node& another) : left(nullptr), right(nullptr), parent(nullptr) {
 		color = another.color;
 		num_of_less = another.num_of_less;
 		num_of_greater = another.num_of_greater;
 		data = new T;
 		*data = *another.data;
-	}
+	}*/
 
 	template<typename T>
 	node<T>::~node() {
@@ -37,17 +37,18 @@ namespace Trees {
 			head_ = nil_;
 		}
 		else {
+			bool go_again = false;
 			nil_ = new node<T>;
 			head_ = new node<T>;
 			*head_ = *another.head_;
 			head_->data = new T;
 			*head_->data = *another.head_->data;
 			head_->left = nil_;
-			head_->right = nil_;//head_->parent = nullptr;
+			head_->right = nil_;
 			node<T>* cur1 = head_;
 			node<T>* cur2 = another.head_;
 			while (true) {
-				while (cur2->left != nil_ && cur1->left == nil_) {
+				while (cur2->left != another.nil_ && cur1->left == nil_) {
 					cur2 = cur2->left;
 					assert(cur1->left != nullptr);
 					cur1->left = new node<T>;
@@ -59,7 +60,7 @@ namespace Trees {
 					cur1->left->right = nil_;
 					cur1 = cur1->left;
 				}
-				while (cur2->right != nil_ && cur1->right == nil_) {
+				while (cur2->right != another.nil_ && cur1->right == nil_) {
 					cur2 = cur2->right;
 					assert(cur1->right != nullptr);
 					cur1->right = new node<T>;
@@ -70,6 +71,12 @@ namespace Trees {
 					cur1->right->left = nil_;
 					cur1->right->right = nil_;
 					cur1 = cur1->right;
+					go_again = true;
+					break;
+				}
+				if (go_again) {
+					go_again = false;
+					continue;
 				}
 				if (cur2 != another.head_) {
 					cur1 = cur1->parent;
@@ -138,11 +145,8 @@ namespace Trees {
 		if (this == &another) {
 			return *this;
 		}
-		delete this;
-		this->head_ = another.head_;
-		this->nil_ = another.nil_;
-		another.head_ = nullptr;
-		another.nil_ = nullptr;
+		std::swap(this->head_, another.head_);
+		std::swap(this->nil_, another.nil_);
 		return *this;
 	}
 

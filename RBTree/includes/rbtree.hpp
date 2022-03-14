@@ -7,7 +7,7 @@ namespace Trees {
 	template<typename T>
 	struct node {
 		node(int col = BLACK);
-		node(const node& another);
+		//node(const node& another);
 		~node();
 
 		int color;
