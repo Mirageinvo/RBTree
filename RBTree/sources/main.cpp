@@ -3,9 +3,9 @@
 
 int main() {
     std::string sign;
-    long long int num;
+    int64_t num;
     size_t stat;
-    Trees::RBTree<long long int> tree;
+    Trees::RBTree<int64_t> tree;
     std::cin >> sign;
     while (!std::cin.eof()) {
         if (sign.size() == 1 && sign == "k") {
@@ -14,15 +14,14 @@ int main() {
         }
         else if (sign.size() == 1 && sign == "m") {
             std::cin >> stat;
-            tree.mth_statistic(stat);
+            std::cout << tree.mth_statistic(stat) << std::endl;
         }
         else if (sign.size() == 1 && sign == "n") {
             std::cin >> num;
             std::cout << tree.num_of_less(num) << std::endl;
         }
         else {
-            //std::cout << "Unknown command" << std::endl;
-            return 0;
+            std::cout << "Unknown command" << std::endl;
         }
         std::cin >> sign;
     }
