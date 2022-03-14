@@ -99,21 +99,29 @@ namespace Trees {
 	RBTree<T>::~RBTree() {
 		node<T>* cur = head_;
 		node<T>* tmp;
+		bool go_again = false;
 		while (head_ != nullptr && head_ != nil_) {
 			while (cur->left != nullptr && cur->left != nil_) {
 				cur = cur->left;
 			}
 			while (cur->right != nullptr && cur->right != nil_) {
 				cur = cur->right;
+				go_again = true;
+				break;
+			}
+			if (go_again) {
+				go_again = false;
+				continue;
 			}
 			if (cur != head_) {
 				tmp = cur;
 				cur = cur->parent;
-				delete tmp;
 				if (tmp == cur->right) {
+					delete tmp;
 					cur->right = nullptr;
 				}
 				else {
+					delete tmp;
 					cur->left = nullptr;
 				}
 			}
@@ -150,12 +158,12 @@ namespace Trees {
 	}
 
 	template<typename T>
-	node<T>* RBTree<T>::grandfather(node<T>* init) {
+	node<T>* RBTree<T>::grandfather(node<T>* init) const {
 		return (init->parent != nullptr && init->parent->parent != nullptr) ? init->parent->parent : nullptr;
 	}
 
 	template<typename T>
-	node<T>* RBTree<T>::uncle(node<T>* init) {
+	node<T>* RBTree<T>::uncle(node<T>* init) const {
 		node<T>* grdf = grandfather(init);
 		if (grdf == nullptr) {
 			return nullptr;
@@ -174,14 +182,22 @@ namespace Trees {
 		if (init->parent == head_) {
 			init->parent->right = init->left;
 			init->parent->parent = init;
+			init->left->parent = init->parent;///???????????????????????
 			init->left = init->parent;
 			init->parent = nullptr;
 			head_ = init;
 		}
 		else {
 			node<T>* grnd = grandfather(init);
+			if (init->parent == grnd->right) {
+				grnd->right = init;
+			}
+			else {
+				grnd->left = init;
+			}
 			init->parent->right = init->left;
 			init->parent->parent = init;
+			init->left->parent = init->parent;//??????????????????looks fine
 			init->left = init->parent;
 			init->parent = grnd;
 		}
@@ -195,14 +211,22 @@ namespace Trees {
 		if (init->parent == head_) {
 			init->parent->left = init->right;
 			init->parent->parent = init;
+			init->right->parent = init->parent;/////?????????????????
 			init->right = init->parent;
 			init->parent = nullptr;
 			head_ = init;
 		}
 		else {
 			node<T>* grnd = grandfather(init);
+			if (init->parent == grnd->right) {
+				grnd->right = init;
+			}
+			else {
+				grnd->left = init;
+			}
 			init->parent->left = init->right;
 			init->parent->parent = init;
+			init->right->parent = init->parent;//////////?????????????????looks fine
 			init->right = init->parent;
 			init->parent = grnd;
 		}
@@ -294,7 +318,6 @@ namespace Trees {
 				}
 				else {
 					tmp = tmp->right;
-					continue;
 				}
 			}
 			else {
@@ -315,6 +338,34 @@ namespace Trees {
 				}
 				else {
 					tmp = tmp->left;
+				}
+			}
+		}
+	}
+
+	template<typename T>
+	size_t RBTree<T>::num_of_less(T el) const {
+		if (head_ == nil_) {
+			return 0;
+		}
+		size_t ans = 0;
+		node<T>* cur = head_;
+		while (true) {
+			if (*cur->data == el) {
+				return ans + cur->num_of_less;
+			}
+			else if (*cur->data < el) {
+				ans += cur->num_of_less + 1;
+				if (cur->right != nil_) {
+					cur = cur->right;
+				}
+				else {
+					return ans;
+				}
+			}
+			else {
+				if (cur->left != nil_) {
+					//cur->
 				}
 			}
 		}

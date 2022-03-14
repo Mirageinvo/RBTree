@@ -30,12 +30,13 @@ namespace Trees {
 		RBTree& operator=(const RBTree& another);
 
 		void insert(T el);
+		size_t num_of_less(T el) const;
 	private:
 		node<T>* nil_;
 		node<T>* head_;
 		bool fix_tree(node<T>* init);
-		node<T>* grandfather(node<T>* init);
-		node<T>* uncle(node<T>* init);
+		node<T>* grandfather(node<T>* init) const;
+		node<T>* uncle(node<T>* init) const;
 		void rotate_left(node<T>* init);
 		void rotate_right(node<T>* init);
 	};
