@@ -10,15 +10,6 @@ namespace Trees {
 	template<typename T>
 	node<T>::node(int col) : color(col), num_of_less(0), num_of_greater(0), left(nullptr), right(nullptr), parent(nullptr), data(nullptr) {}
 
-	/*template<typename T>
-	node<T>::node(const node& another) : left(nullptr), right(nullptr), parent(nullptr) {
-		color = another.color;
-		num_of_less = another.num_of_less;
-		num_of_greater = another.num_of_greater;
-		data = new T;
-		*data = *another.data;
-	}*/
-
 	template<typename T>
 	node<T>::~node() {
 		delete data;
