@@ -39,7 +39,7 @@ namespace Trees {
 		else {
 			nil_ = new node<T>;
 			head_ = new node<T>;
-			*head_ = *another.head_;//////////= doesn't work
+			*head_ = *another.head_;
 			head_->data = new T;
 			*head_->data = *another.head_->data;
 			head_->left = nil_;
@@ -63,7 +63,7 @@ namespace Trees {
 					cur2 = cur2->right;
 					assert(cur1->right != nullptr);
 					cur1->right = new node<T>;
-					*cur1->right = *cur2;///////////////////= doesn't work?????????????
+					*cur1->right = *cur2;
 					cur1->right->data = new T;
 					*cur1->right->data = *cur2->data;
 					cur1->right->parent = cur1;
@@ -131,7 +131,6 @@ namespace Trees {
 			}
 		}
 		delete nil_;
-		//delete head_;
 	}
 
 	template<typename T>
@@ -153,7 +152,7 @@ namespace Trees {
 			return *this;
 		}
 		RBTree<T> tmp(another);
-		*this = std::move(another);
+		*this = std::move(tmp);
 		return *this;
 	}
 
@@ -178,11 +177,11 @@ namespace Trees {
 
 	template<typename T>
 	void RBTree<T>::rotate_left(node<T>* init) {
-		assert(init != head_); // && init == init->parent->right
+		assert(init != head_);
 		if (init->parent == head_) {
 			init->parent->right = init->left;
 			init->parent->parent = init;
-			init->left->parent = init->parent;///???????????????????????
+			init->left->parent = init->parent;
 			init->left = init->parent;
 			init->parent = nullptr;
 			head_ = init;
@@ -197,7 +196,7 @@ namespace Trees {
 			}
 			init->parent->right = init->left;
 			init->parent->parent = init;
-			init->left->parent = init->parent;//??????????????????looks fine
+			init->left->parent = init->parent;
 			init->left = init->parent;
 			init->parent = grnd;
 		}
@@ -207,11 +206,11 @@ namespace Trees {
 
 	template<typename T>
 	void RBTree<T>::rotate_right(node<T>* init) {
-		assert(init != head_); // && init == init->parent->left
+		assert(init != head_);
 		if (init->parent == head_) {
 			init->parent->left = init->right;
 			init->parent->parent = init;
-			init->right->parent = init->parent;/////?????????????????
+			init->right->parent = init->parent;
 			init->right = init->parent;
 			init->parent = nullptr;
 			head_ = init;
@@ -226,7 +225,7 @@ namespace Trees {
 			}
 			init->parent->left = init->right;
 			init->parent->parent = init;
-			init->right->parent = init->parent;//////////?????????????????looks fine
+			init->right->parent = init->parent;
 			init->right = init->parent;
 			init->parent = grnd;
 		}
@@ -241,13 +240,13 @@ namespace Trees {
 			return true;
 		}
 		else if (init->parent == head_) {
-			return true;//////////////???????????????????????? mb ok
+			return true;
 		}
 		else {
 			if (init->parent->color == BLACK) {
 				return true;
 			}
-			else { //if color of parent is red, it means that parent is not a root
+			else {
 				node<T>* unc = uncle(init);
 				if (unc->color == RED) {
 					unc->color = BLACK;
@@ -275,7 +274,7 @@ namespace Trees {
 						else {
 							init = init->parent;
 						}
-						assert(init->right->color == RED && init->parent->color == BLACK);//fail
+						assert(init->right->color == RED && init->parent->color == BLACK);
 						rotate_left(init);
 						init->color = BLACK;
 						init->left->color = RED;
@@ -352,7 +351,8 @@ namespace Trees {
 		node<T>* cur = head_;
 		while (true) {
 			if (*cur->data == el) {
-				return ans + cur->num_of_less;
+				ans += cur->num_of_less;
+				break;
 			}
 			else if (*cur->data < el) {
 				ans += cur->num_of_less + 1;
@@ -360,14 +360,29 @@ namespace Trees {
 					cur = cur->right;
 				}
 				else {
-					return ans;
+					break;
 				}
 			}
 			else {
 				if (cur->left != nil_) {
-					//cur->
+					cur = cur->left;
+				}
+				else {
+					break;
 				}
 			}
+		}
+		return ans;
+	}
+
+	template<typename T>
+	T RBTree<T>::mth_statistic(size_t stat) const {
+		size_t ans = 0;
+		if (head_->num_of_less + head_->num_of_greater + 1 < stat) {
+			return 0;
+		}
+		while (true) {
+
 		}
 	}
 

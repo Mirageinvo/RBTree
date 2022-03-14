@@ -31,6 +31,7 @@ namespace Trees {
 
 		void insert(T el);
 		size_t num_of_less(T el) const;
+		T mth_statistic(size_t stat) const;
 	private:
 		node<T>* nil_;
 		node<T>* head_;
