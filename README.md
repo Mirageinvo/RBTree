@@ -7,7 +7,7 @@ mkdir build && cd build/
 cmake .. && make
 ```
 
-Adding sanitizers, if needed:
+Adding sanitizers to main program, if needed (sanitizers are already enabled for the tests):
 
 ```
 -DADD_SANITIZERS=1
