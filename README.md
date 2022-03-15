@@ -17,7 +17,6 @@ To run main program:
 
 ```
 make run_main
-
 ```
 
 To run tests:
