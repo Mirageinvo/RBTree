@@ -3,8 +3,8 @@
 
 int main() {
     std::string sign;
-    int64_t num;
     size_t stat;
+    int64_t num;
     Trees::RBTree<int64_t> tree;
     std::cin >> sign;
     while (!std::cin.eof()) {
