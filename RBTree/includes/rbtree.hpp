@@ -2,44 +2,41 @@
 #define RBTREE_INCLUDES_RBTREE
 
 namespace Trees {
-enum { BLACK, RED };
-
-template <typename T>
-struct node {
-  node(int col = BLACK);
-  ~node();
-
-  int color;
-  size_t num_of_less;
-  size_t num_of_greater;
-  node<T>* left;
-  node<T>* right;
-  node<T>* parent;
-  T* data;
-};
+enum node_color { BLACK, RED };
 
 template <typename T>
 class RBTree {
+  struct node {
+    node(int col = BLACK);
+    ~node();
+    int color;
+    size_t num_of_less;
+    size_t num_of_greater;
+    node* left;
+    node* right;
+    node* parent;
+    T* data;
+  };
+
  public:
   RBTree();
   RBTree(const RBTree& another);
-  RBTree(RBTree&& another);
+  RBTree(RBTree&& another) noexcept;
   ~RBTree();
-  RBTree& operator=(RBTree&& another);
+  RBTree& operator=(RBTree&& another) noexcept;
   RBTree& operator=(const RBTree& another);
-
   void insert(T el);
   size_t num_of_less(T el) const;
   T mth_statistic(size_t stat) const;
 
  private:
-  node<T>* nil_;
-  node<T>* head_;
-  bool fix_tree(node<T>* init);
-  node<T>* grandfather(node<T>* init) const;
-  node<T>* uncle(node<T>* init) const;
-  void rotate_left(node<T>* init);
-  void rotate_right(node<T>* init);
+  node* nil_;
+  node* head_;
+  bool fix_tree(node* init);
+  node* grandfather(node* init) const;
+  node* uncle(node* init) const;
+  void rotate_left(node* init);
+  void rotate_right(node* init);
 };
 }  // namespace Trees
 
