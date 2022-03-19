@@ -8,8 +8,13 @@ template <typename T>
 class RBTree {
   struct node {
     node();
-    node(T el);
+    node(T el, node* nil, node* par = nullptr, int col = BLACK);
+    node(node* el, node* nil, node* par);
+    node(const RBTree<T>::node& another);
+    node(RBTree<T>::node&& another) noexcept;
     ~node();
+    node& operator=(const node& another);
+    node& operator=(node&& another) noexcept;
     int color;
     size_t num_of_less;
     size_t num_of_greater;
@@ -36,6 +41,8 @@ class RBTree {
   bool fix_tree(node* init);
   node* grandfather(node* init) const;
   node* uncle(node* init) const;
+  void move_pointers(node*& cur1, node*& cur2, bool& go_again,
+                     const RBTree& another);
   void rotate_left(node* init);
   void rotate_right(node* init);
 };
