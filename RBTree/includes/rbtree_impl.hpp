@@ -9,8 +9,8 @@
 namespace Trees {
 
 template <typename T>
-RBTree<T>::node::node(int col)
-    : color(col),
+RBTree<T>::node::node()
+    : color(BLACK),
       num_of_less(0),
       num_of_greater(0),
       left(nullptr),
@@ -19,12 +19,26 @@ RBTree<T>::node::node(int col)
       data(nullptr) {}
 
 template <typename T>
+RBTree<T>::node::node(T el)
+    : color(BLACK),
+      num_of_less(0),
+      num_of_greater(0),
+      left(nullptr),
+      right(nullptr),
+      parent(nullptr),
+      data(new T) {
+  *data = el;
+}
+
+template <typename T>
 RBTree<T>::node::~node() {
   delete data;
 }
 
 template <typename T>
-RBTree<T>::RBTree() : nil_(new node), head_(nil_) {}
+RBTree<T>::RBTree() : nil_(new node) {
+  head_ = nil_;
+}
 
 template <typename T>
 RBTree<T>::RBTree(const RBTree& another) {

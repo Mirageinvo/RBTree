@@ -7,7 +7,8 @@ enum node_color { BLACK, RED };
 template <typename T>
 class RBTree {
   struct node {
-    node(int col = BLACK);
+    node();
+    node(T el);
     ~node();
     int color;
     size_t num_of_less;
