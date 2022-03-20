@@ -435,6 +435,7 @@ void RBTree<T>::delete_tree() {
     }
   }
   delete nil_;
+  nil_ = nullptr;
 }
 
 }  // namespace Trees
