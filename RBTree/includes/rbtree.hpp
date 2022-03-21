@@ -5,7 +5,7 @@ namespace Trees {
 enum node_color { BLACK, RED };
 
 template <typename T>
-class RBTree {
+class RBTree final {
   struct node {
     node()
         : color(BLACK),
