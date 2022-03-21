@@ -7,14 +7,7 @@ enum node_color { BLACK, RED };
 template <typename T>
 class RBTree final {
   struct node {
-    node()
-        : color(BLACK),
-          num_of_less(0),
-          num_of_greater(0),
-          left(nullptr),
-          right(nullptr),
-          parent(nullptr),
-          data(nullptr) {}
+    node() : left(nullptr), right(nullptr), parent(nullptr), data(nullptr) {}
     node(T el, node* nil, node* par = nullptr, int col = BLACK);
     node(node* el, node* nil, node* par);
     node(const RBTree<T>::node& another);
@@ -22,9 +15,9 @@ class RBTree final {
     ~node();
     node& operator=(const node& another);
     node& operator=(node&& another) noexcept;
-    int color;
-    size_t num_of_less;
-    size_t num_of_greater;
+    int color = BLACK;
+    size_t num_of_less = 0;
+    size_t num_of_greater = 0;
     node* left;
     node* right;
     node* parent;

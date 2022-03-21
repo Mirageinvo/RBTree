@@ -10,13 +10,7 @@ namespace Trees {
 
 template <typename T>
 RBTree<T>::node::node(T el, node* nil, node* par, int col)
-    : color(col),
-      num_of_less(0),
-      num_of_greater(0),
-      left(nil),
-      right(nil),
-      parent(par),
-      data(new T) {
+    : color(col), left(nil), right(nil), parent(par), data(new T) {
   *data = el;
 }
 
@@ -66,6 +60,9 @@ RBTree<T>::node::~node() {
 template <typename T>
 typename RBTree<T>::node& RBTree<T>::node::operator=(
     const RBTree::node& another) {
+  if (this == &another) {
+    return *this;
+  }
   color = another.color;
   num_of_less = another.num_of_less;
   num_of_greater = another.num_of_greater;
@@ -73,11 +70,15 @@ typename RBTree<T>::node& RBTree<T>::node::operator=(
   right = another.right;
   parent = another.parent;
   data = another.data;
+  return *this;
 }
 
 template <typename T>
 typename RBTree<T>::node& RBTree<T>::node::operator=(
     RBTree::node&& another) noexcept {
+  if (this == &another) {
+    return *this;
+  }
   color = another.color;
   num_of_less = another.num_of_less;
   num_of_greater = another.num_of_greater;
