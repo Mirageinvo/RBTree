@@ -18,7 +18,7 @@ add_custom_target(
 set(CMAKE_CXX_CLANG_TIDY
     clang-tidy;
     --format-style=file;
-    --header-filter=*.hpp;
+    --header-filter=.hpp;
 )
 
 add_subdirectory("RBTree")
