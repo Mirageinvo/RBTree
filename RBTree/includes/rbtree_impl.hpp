@@ -6,12 +6,19 @@
 
 #include "rbtree.hpp"
 
-namespace Trees {
+namespace trees {
 
 template <typename T>
 RBTree<T>::node::node(T el, node* nil, node* par, int col)
-    : color(col), left(nil), right(nil), parent(par), data(new T) {
-  *data = el;
+    : color(col), left(nil), right(nil), parent(par), data(nullptr) {
+    try {
+        data = new T;
+        *data = el;
+    }
+    catch (...) {
+        delete data;
+        throw;
+    }
 }
 
 template <typename T>
@@ -22,20 +29,40 @@ RBTree<T>::node::node(node* el, node* nil, node* par)
       left(nil),
       right(nil),
       parent(par),
-      data(new T) {
+      data(nullptr) {
   assert(el);
-  *data = *el->data;
+  if (el->data) {
+      try {
+          data = new T;
+          *data = *el->data;
+      }
+      catch (...) {
+          delete data;
+          throw;
+      }
+  }
 }
 
 template <typename T>
 RBTree<T>::node::node(const node& another)
     : color(another.color),
-      num_of_less(another.num_of_less),
-      num_of_greater(another.num_of_greater),
-      left(another.left),
-      right(another.right),
-      parent(another.parent),
-      data(another.data) {}
+    num_of_less(another.num_of_less),
+    num_of_greater(another.num_of_greater),
+    left(another.left),
+    right(another.right),
+    parent(another.parent),
+    data(nullptr) {
+    if (another.data) {
+        try {
+            data = new T;
+            *data = *another.data;
+        }
+        catch (...) {
+            delete data;
+            throw;
+        }
+    }
+}
 
 template <typename T>
 RBTree<T>::node::node(node&& another) noexcept
@@ -69,7 +96,17 @@ typename RBTree<T>::node& RBTree<T>::node::operator=(
   left = another.left;
   right = another.right;
   parent = another.parent;
-  data = another.data;
+  data = nullptr;
+  if (another.data) {
+      try {
+          data = new T;
+          *data = *another.data;
+      }
+      catch (...) {
+          delete data;
+          throw;
+      }
+  }
   return *this;
 }
 
@@ -439,5 +476,5 @@ void RBTree<T>::delete_tree() {
   nil_ = nullptr;
 }
 
-}  // namespace Trees
+}  // namespace trees
 #endif  // RBTREE_INCLUDES_RBTREE_IMPL

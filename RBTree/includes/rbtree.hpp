@@ -1,11 +1,12 @@
 #ifndef RBTREE_INCLUDES_RBTREE
 #define RBTREE_INCLUDES_RBTREE
 
-namespace Trees {
+namespace trees {
 enum node_color { BLACK, RED };
 
 template <typename T>
 class RBTree final {
+ public:
   struct node {
     node() : left(nullptr), right(nullptr), parent(nullptr), data(nullptr) {}
     node(T el, node* nil, node* par = nullptr, int col = BLACK);
@@ -24,7 +25,6 @@ class RBTree final {
     T* data;
   };
 
- public:
   RBTree();
   RBTree(const RBTree& another);
   RBTree(RBTree&& another) noexcept;
@@ -47,6 +47,6 @@ class RBTree final {
                      const RBTree& another);
   void delete_tree();
 };
-}  // namespace Trees
+}  // namespace trees
 
 #endif  // RBTREE_INCLUDES_RBTREE
