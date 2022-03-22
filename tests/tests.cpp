@@ -6,93 +6,115 @@
 const size_t kNum = 1e5;
 
 TEST(RBTreeNode, DefaultAndCopyConstructorTest) {
-    trees::RBTree<size_t>::node tmp;
-    ASSERT_TRUE(tmp.color == trees::node_color::BLACK && tmp.num_of_less == 0 && tmp.num_of_greater == 0);
-    ASSERT_TRUE(tmp.left == nullptr && tmp.right == nullptr && tmp.parent == nullptr && tmp.data == nullptr);
-    tmp.data = new size_t;
-    for (size_t i = 0; i <= kNum; ++i) {
-        tmp.num_of_less = i;
-        tmp.num_of_greater = i;
-        ASSERT_TRUE(tmp.data);
-        *tmp.data = i + 1;
-        trees::RBTree<size_t>::node tmp_2 = tmp;
-        ASSERT_TRUE(tmp.color == tmp_2.color && tmp.num_of_less == tmp_2.num_of_less && tmp.num_of_greater == tmp_2.num_of_greater);
-        ASSERT_TRUE(tmp.left == tmp_2.left && tmp.right == tmp_2.right && tmp.parent == tmp_2.parent && tmp.data && tmp_2.data);
-        ASSERT_TRUE(*tmp.data == *tmp_2.data && tmp.data != tmp_2.data);
-    }
+  trees::RBTree<size_t>::node tmp;
+  ASSERT_TRUE(tmp.color == trees::node_color::BLACK && tmp.num_of_less == 0 &&
+              tmp.num_of_greater == 0);
+  ASSERT_TRUE(tmp.left == nullptr && tmp.right == nullptr &&
+              tmp.parent == nullptr && tmp.data == nullptr);
+  tmp.data = new size_t;
+  for (size_t i = 0; i <= kNum; ++i) {
+    tmp.num_of_less = i;
+    tmp.num_of_greater = i;
+    ASSERT_TRUE(tmp.data);
+    *tmp.data = i + 1;
+    trees::RBTree<size_t>::node tmp_2 = tmp;
+    ASSERT_TRUE(tmp.color == tmp_2.color &&
+                tmp.num_of_less == tmp_2.num_of_less &&
+                tmp.num_of_greater == tmp_2.num_of_greater);
+    ASSERT_TRUE(tmp.left == tmp_2.left && tmp.right == tmp_2.right &&
+                tmp.parent == tmp_2.parent && tmp.data && tmp_2.data);
+    ASSERT_TRUE(*tmp.data == *tmp_2.data && tmp.data != tmp_2.data);
+  }
 }
 
 TEST(RBTreeNode, AnotherConstructorFirstTest) {
-    for (size_t i = 0; i <= kNum; ++i) {
-        trees::RBTree<size_t>::node tmp(i, nullptr, nullptr, static_cast<int>(i));
-        ASSERT_TRUE(tmp.data);
-        ASSERT_TRUE(tmp.color == static_cast<int>(i) && tmp.num_of_less == 0 && tmp.num_of_greater == 0);
-        ASSERT_TRUE(tmp.left == nullptr && tmp.right == nullptr && tmp.parent == nullptr && tmp.data);
-        ASSERT_TRUE(*tmp.data == i);
-    }
+  for (size_t i = 0; i <= kNum; ++i) {
+    trees::RBTree<size_t>::node tmp(i, nullptr, nullptr, static_cast<int>(i));
+    ASSERT_TRUE(tmp.data);
+    ASSERT_TRUE(tmp.color == static_cast<int>(i) && tmp.num_of_less == 0 &&
+                tmp.num_of_greater == 0);
+    ASSERT_TRUE(tmp.left == nullptr && tmp.right == nullptr &&
+                tmp.parent == nullptr && tmp.data);
+    ASSERT_TRUE(*tmp.data == i);
+  }
 }
 
 TEST(RBTreeNode, AnotherConstructorSecondTest) {
-    for (size_t i = 0; i <= kNum; ++i) {
-        trees::RBTree<size_t>::node tmp(i, nullptr, nullptr, static_cast<int>(i));
-        trees::RBTree<size_t>::node tmp_2(&tmp, nullptr, nullptr);
-        ASSERT_TRUE(tmp_2.data);
-        ASSERT_TRUE(tmp_2.color == static_cast<int>(i) && tmp_2.num_of_less == tmp.num_of_less && tmp_2.num_of_greater == tmp.num_of_less);
-        ASSERT_TRUE(tmp_2.left == nullptr && tmp_2.right == nullptr && tmp_2.parent == nullptr && tmp.data && tmp_2.data);
-        ASSERT_TRUE(*tmp.data == *tmp_2.data && tmp.data != tmp_2.data);
-    }
+  for (size_t i = 0; i <= kNum; ++i) {
+    trees::RBTree<size_t>::node tmp(i, nullptr, nullptr, static_cast<int>(i));
+    trees::RBTree<size_t>::node tmp_2(&tmp, nullptr, nullptr);
+    ASSERT_TRUE(tmp_2.data);
+    ASSERT_TRUE(tmp_2.color == static_cast<int>(i) &&
+                tmp_2.num_of_less == tmp.num_of_less &&
+                tmp_2.num_of_greater == tmp.num_of_less);
+    ASSERT_TRUE(tmp_2.left == nullptr && tmp_2.right == nullptr &&
+                tmp_2.parent == nullptr && tmp.data && tmp_2.data);
+    ASSERT_TRUE(*tmp.data == *tmp_2.data && tmp.data != tmp_2.data);
+  }
 }
 
 TEST(RBTreeNode, MoveConstructorTest) {
-    for (size_t i = 0; i <= kNum; ++i) {
-        trees::RBTree<size_t>::node tmp(i, nullptr, nullptr, static_cast<int>(i));
-        trees::RBTree<size_t>::node tmp_2 = std::move(tmp);
-        ASSERT_TRUE(tmp_2.data);
-        ASSERT_TRUE(tmp_2.color == static_cast<int>(i) && tmp_2.num_of_less == 0 && tmp_2.num_of_greater == 0);
-        ASSERT_TRUE(tmp_2.left == nullptr && tmp_2.right == nullptr && tmp_2.parent == nullptr && tmp_2.data && tmp.data == nullptr);
-        ASSERT_TRUE(*tmp_2.data == i);
-    }
+  for (size_t i = 0; i <= kNum; ++i) {
+    trees::RBTree<size_t>::node tmp(i, nullptr, nullptr, static_cast<int>(i));
+    trees::RBTree<size_t>::node tmp_2 = std::move(tmp);
+    ASSERT_TRUE(tmp_2.data);
+    ASSERT_TRUE(tmp_2.color == static_cast<int>(i) && tmp_2.num_of_less == 0 &&
+                tmp_2.num_of_greater == 0);
+    ASSERT_TRUE(tmp_2.left == nullptr && tmp_2.right == nullptr &&
+                tmp_2.parent == nullptr && tmp_2.data && tmp.data == nullptr);
+    ASSERT_TRUE(*tmp_2.data == i);
+  }
 }
 
 TEST(RBTreeNode, CopyAssignmentTest) {
-    trees::RBTree<size_t>::node tmp;
-    trees::RBTree<size_t>::node tmp_2;
-    ASSERT_TRUE(tmp.color == trees::node_color::BLACK && tmp.num_of_less == 0 && tmp.num_of_greater == 0);
-    ASSERT_TRUE(tmp.left == nullptr && tmp.right == nullptr && tmp.parent == nullptr && tmp.data == nullptr);
-    tmp.data = new size_t;
-    for (size_t i = 0; i <= kNum; ++i) {
-        tmp.num_of_less = i;
-        tmp.num_of_greater = i;
-        ASSERT_TRUE(tmp.data);
-        *tmp.data = i + 1;
-        tmp_2 = tmp;
-        ASSERT_TRUE(tmp.color == tmp_2.color && tmp.num_of_less == tmp_2.num_of_less && tmp.num_of_greater == tmp_2.num_of_greater);
-        ASSERT_TRUE(tmp.left == tmp_2.left && tmp.right == tmp_2.right && tmp.parent == tmp_2.parent && tmp.data && tmp_2.data);
-        ASSERT_TRUE(*tmp.data == *tmp_2.data && tmp.data != tmp_2.data);
-        delete tmp_2.data;
-        tmp_2.data = nullptr;
-    }
+  trees::RBTree<size_t>::node tmp;
+  trees::RBTree<size_t>::node tmp_2;
+  ASSERT_TRUE(tmp.color == trees::node_color::BLACK && tmp.num_of_less == 0 &&
+              tmp.num_of_greater == 0);
+  ASSERT_TRUE(tmp.left == nullptr && tmp.right == nullptr &&
+              tmp.parent == nullptr && tmp.data == nullptr);
+  tmp.data = new size_t;
+  for (size_t i = 0; i <= kNum; ++i) {
+    tmp.num_of_less = i;
+    tmp.num_of_greater = i;
+    ASSERT_TRUE(tmp.data);
+    *tmp.data = i + 1;
+    tmp_2 = tmp;
+    ASSERT_TRUE(tmp.color == tmp_2.color &&
+                tmp.num_of_less == tmp_2.num_of_less &&
+                tmp.num_of_greater == tmp_2.num_of_greater);
+    ASSERT_TRUE(tmp.left == tmp_2.left && tmp.right == tmp_2.right &&
+                tmp.parent == tmp_2.parent && tmp.data && tmp_2.data);
+    ASSERT_TRUE(*tmp.data == *tmp_2.data && tmp.data != tmp_2.data);
+    delete tmp_2.data;
+    tmp_2.data = nullptr;
+  }
 }
 
 TEST(RBTreeNode, MoveAssignmentTest) {
-    trees::RBTree<size_t>::node tmp;
-    trees::RBTree<size_t>::node tmp_2;
-    ASSERT_TRUE(tmp.color == trees::node_color::BLACK && tmp.num_of_less == 0 && tmp.num_of_greater == 0);
-    ASSERT_TRUE(tmp.left == nullptr && tmp.right == nullptr && tmp.parent == nullptr && tmp.data == nullptr);
-    for (size_t i = 0; i <= kNum; ++i) {
-        tmp.data = new size_t;
-        tmp.num_of_less = i;
-        tmp.num_of_greater = i;
-        ASSERT_TRUE(tmp.data);
-        *tmp.data = i + 1;
-        tmp_2 = std::move(tmp);
-        ASSERT_TRUE(tmp_2.color == trees::node_color::BLACK && tmp_2.num_of_less == i && tmp_2.num_of_greater == i);
-        ASSERT_TRUE(tmp.left == nullptr && tmp_2.left == nullptr && tmp.right == nullptr && tmp_2.right == nullptr);
-        ASSERT_TRUE(tmp.parent == nullptr && tmp_2.parent == nullptr && tmp.data == nullptr && tmp_2.data);
-        ASSERT_TRUE(*tmp_2.data == i + 1);
-        delete tmp_2.data;
-        tmp_2.data = nullptr;
-    }
+  trees::RBTree<size_t>::node tmp;
+  trees::RBTree<size_t>::node tmp_2;
+  ASSERT_TRUE(tmp.color == trees::node_color::BLACK && tmp.num_of_less == 0 &&
+              tmp.num_of_greater == 0);
+  ASSERT_TRUE(tmp.left == nullptr && tmp.right == nullptr &&
+              tmp.parent == nullptr && tmp.data == nullptr);
+  for (size_t i = 0; i <= kNum; ++i) {
+    tmp.data = new size_t;
+    tmp.num_of_less = i;
+    tmp.num_of_greater = i;
+    ASSERT_TRUE(tmp.data);
+    *tmp.data = i + 1;
+    tmp_2 = std::move(tmp);
+    ASSERT_TRUE(tmp_2.color == trees::node_color::BLACK &&
+                tmp_2.num_of_less == i && tmp_2.num_of_greater == i);
+    ASSERT_TRUE(tmp.left == nullptr && tmp_2.left == nullptr &&
+                tmp.right == nullptr && tmp_2.right == nullptr);
+    ASSERT_TRUE(tmp.parent == nullptr && tmp_2.parent == nullptr &&
+                tmp.data == nullptr && tmp_2.data);
+    ASSERT_TRUE(*tmp_2.data == i + 1);
+    delete tmp_2.data;
+    tmp_2.data = nullptr;
+  }
 }
 
 TEST(RBTree, InsertNumOfLessMthStatisticTest) {
@@ -319,7 +341,7 @@ TEST(RBTree, EndToEndTestFifth) {
   in_ans.close();
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
