@@ -14,7 +14,11 @@ int main() {
       tree.insert(num);
     } else if (sign.size() == 1 && sign == "m") {
       std::cin >> stat;
-      std::cout << tree.mth_statistic(stat) << std::endl;
+      try {
+        std::cout << tree.mth_statistic(stat) << std::endl;
+      } catch (const std::out_of_range &e) {
+        std::cout << e.what() << std::endl;
+      }
     } else if (sign.size() == 1 && sign == "n") {
       std::cin >> num;
       std::cout << tree.num_of_less(num) << std::endl;
