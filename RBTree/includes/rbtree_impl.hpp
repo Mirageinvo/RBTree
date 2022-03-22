@@ -9,20 +9,19 @@
 namespace trees {
 
 template <typename T>
-RBTree<T>::node::node(T el, node* nil, node* par, int col)
+RBTree<T>::node::node(T el, node *nil, node *par, int col)
     : color(col), left(nil), right(nil), parent(par), data(nullptr) {
-    try {
-        data = new T;
-        *data = el;
-    }
-    catch (...) {
-        delete data;
-        throw;
-    }
+  try {
+    data = new T;
+    *data = el;
+  } catch (...) {
+    delete data;
+    throw;
+  }
 }
 
 template <typename T>
-RBTree<T>::node::node(node* el, node* nil, node* par)
+RBTree<T>::node::node(node *el, node *nil, node *par)
     : color(el->color),
       num_of_less(el->num_of_less),
       num_of_greater(el->num_of_greater),
@@ -31,41 +30,39 @@ RBTree<T>::node::node(node* el, node* nil, node* par)
       parent(par),
       data(nullptr) {
   assert(el);
-  if (el->data) {
-      try {
-          data = new T;
-          *data = *el->data;
-      }
-      catch (...) {
-          delete data;
-          throw;
-      }
+  if (el && el->data) {
+    try {
+      data = new T;
+      *data = *el->data;
+    } catch (...) {
+      delete data;
+      throw;
+    }
   }
 }
 
 template <typename T>
-RBTree<T>::node::node(const node& another)
+RBTree<T>::node::node(const node &another)
     : color(another.color),
-    num_of_less(another.num_of_less),
-    num_of_greater(another.num_of_greater),
-    left(another.left),
-    right(another.right),
-    parent(another.parent),
-    data(nullptr) {
-    if (another.data) {
-        try {
-            data = new T;
-            *data = *another.data;
-        }
-        catch (...) {
-            delete data;
-            throw;
-        }
+      num_of_less(another.num_of_less),
+      num_of_greater(another.num_of_greater),
+      left(another.left),
+      right(another.right),
+      parent(another.parent),
+      data(nullptr) {
+  if (another.data) {
+    try {
+      data = new T;
+      *data = *another.data;
+    } catch (...) {
+      delete data;
+      throw;
     }
+  }
 }
 
 template <typename T>
-RBTree<T>::node::node(node&& another) noexcept
+RBTree<T>::node::node(node &&another) noexcept
     : color(another.color),
       num_of_less(another.num_of_less),
       num_of_greater(another.num_of_greater),
@@ -85,8 +82,8 @@ RBTree<T>::node::~node() {
 }
 
 template <typename T>
-typename RBTree<T>::node& RBTree<T>::node::operator=(
-    const RBTree::node& another) {
+typename RBTree<T>::node &RBTree<T>::node::operator=(
+    const RBTree::node &another) {
   if (this == &another) {
     return *this;
   }
@@ -98,21 +95,20 @@ typename RBTree<T>::node& RBTree<T>::node::operator=(
   parent = another.parent;
   data = nullptr;
   if (another.data) {
-      try {
-          data = new T;
-          *data = *another.data;
-      }
-      catch (...) {
-          delete data;
-          throw;
-      }
+    try {
+      data = new T;
+      *data = *another.data;
+    } catch (...) {
+      delete data;
+      throw;
+    }
   }
   return *this;
 }
 
 template <typename T>
-typename RBTree<T>::node& RBTree<T>::node::operator=(
-    RBTree::node&& another) noexcept {
+typename RBTree<T>::node &RBTree<T>::node::operator=(
+    RBTree::node &&another) noexcept {
   if (this == &another) {
     return *this;
   }
@@ -132,7 +128,7 @@ RBTree<T>::RBTree() : nil_(new node) {
 }
 
 template <typename T>
-RBTree<T>::RBTree(const RBTree& another) {
+RBTree<T>::RBTree(const RBTree &another) {
   head_ = nil_ = nullptr;
   try {
     if (another.head_ == nullptr) {
@@ -144,8 +140,8 @@ RBTree<T>::RBTree(const RBTree& another) {
       bool go_again = false;
       nil_ = new node;
       head_ = new node(another.head_, nil_, nullptr);
-      node* cur1 = head_;
-      node* cur2 = another.head_;
+      node *cur1 = head_;
+      node *cur2 = another.head_;
       while (true) {
         move_pointers(cur1, cur2, go_again, another);
         if (go_again) {
@@ -174,7 +170,7 @@ RBTree<T>::RBTree(const RBTree& another) {
 }
 
 template <typename T>
-RBTree<T>::RBTree(RBTree&& another) noexcept {
+RBTree<T>::RBTree(RBTree &&another) noexcept {
   head_ = another.head_;
   nil_ = another.nil_;
   another.head_ = nullptr;
@@ -187,7 +183,7 @@ RBTree<T>::~RBTree() {
 }
 
 template <typename T>
-RBTree<T>& RBTree<T>::operator=(RBTree&& another) noexcept {
+RBTree<T> &RBTree<T>::operator=(RBTree &&another) noexcept {
   if (this == &another) {
     return *this;
   }
@@ -197,7 +193,7 @@ RBTree<T>& RBTree<T>::operator=(RBTree&& another) noexcept {
 }
 
 template <typename T>
-RBTree<T>& RBTree<T>::operator=(const RBTree& another) {
+RBTree<T> &RBTree<T>::operator=(const RBTree &another) {
   if (this == &another) {
     return *this;
   }
@@ -207,16 +203,16 @@ RBTree<T>& RBTree<T>::operator=(const RBTree& another) {
 }
 
 template <typename T>
-typename RBTree<T>::node* RBTree<T>::grandfather(node* init) const {
+typename RBTree<T>::node *RBTree<T>::grandfather(node *init) const {
   assert(init);
   return (init->parent && init->parent->parent) ? init->parent->parent
                                                 : nullptr;
 }
 
 template <typename T>
-typename RBTree<T>::node* RBTree<T>::uncle(node* init) const {
+typename RBTree<T>::node *RBTree<T>::uncle(node *init) const {
   assert(init);
-  node* grdf = grandfather(init);
+  node *grdf = grandfather(init);
   if (grdf == nullptr) {
     return nullptr;
   }
@@ -228,7 +224,7 @@ typename RBTree<T>::node* RBTree<T>::uncle(node* init) const {
 }
 
 template <typename T>
-void RBTree<T>::rotate_left(node* init) {
+void RBTree<T>::rotate_left(node *init) {
   assert(init && init != head_);
   if (init->parent == head_) {
     init->parent->right = init->left;
@@ -238,7 +234,7 @@ void RBTree<T>::rotate_left(node* init) {
     init->parent = nullptr;
     head_ = init;
   } else {
-    node* grnd = grandfather(init);
+    node *grnd = grandfather(init);
     if (init->parent == grnd->right) {
       grnd->right = init;
     } else {
@@ -255,7 +251,7 @@ void RBTree<T>::rotate_left(node* init) {
 }
 
 template <typename T>
-void RBTree<T>::rotate_right(node* init) {
+void RBTree<T>::rotate_right(node *init) {
   assert(init && init != head_);
   if (init->parent == head_) {
     init->parent->left = init->right;
@@ -265,7 +261,7 @@ void RBTree<T>::rotate_right(node* init) {
     init->parent = nullptr;
     head_ = init;
   } else {
-    node* grnd = grandfather(init);
+    node *grnd = grandfather(init);
     if (init->parent == grnd->right) {
       grnd->right = init;
     } else {
@@ -283,7 +279,7 @@ void RBTree<T>::rotate_right(node* init) {
 }
 
 template <typename T>
-bool RBTree<T>::fix_tree(node* init) {
+bool RBTree<T>::fix_tree(node *init) {
   assert(init);
   if (init == head_) {
     init->color = BLACK;
@@ -294,7 +290,7 @@ bool RBTree<T>::fix_tree(node* init) {
     if (init->parent->color == BLACK) {
       return true;
     } else {
-      node* unc = uncle(init);
+      node *unc = uncle(init);
       if (unc->color == RED) {
         unc->color = BLACK;
         init->parent->color = BLACK;
@@ -337,7 +333,7 @@ void RBTree<T>::insert(T el) {
            head_->num_of_greater == 0 && head_->parent == nullptr);
     return;
   }
-  node* tmp = head_;
+  node *tmp = head_;
   while (true) {
     assert(el != *tmp->data);
     if (el > *tmp->data) {
@@ -374,7 +370,7 @@ size_t RBTree<T>::num_of_less(T el) const {
     return 0;
   }
   size_t ans = 0;
-  node* cur = head_;
+  node *cur = head_;
   while (true) {
     if (*cur->data == el) {
       ans += cur->num_of_less;
@@ -400,11 +396,14 @@ size_t RBTree<T>::num_of_less(T el) const {
 template <typename T>
 T RBTree<T>::mth_statistic(size_t stat) const {
   assert(head_ && head_->num_of_less + head_->num_of_greater + 1 >= stat);
+  if (head_ == nullptr || head_ == nil_) {
+    throw std::out_of_range("The tree is empty");
+  }
   if (head_->num_of_less + head_->num_of_greater + 1 < stat) {
-    return 0;
+    throw std::out_of_range("The value is out of range");
   }
   size_t actual_value = stat;
-  node* cur = head_;
+  node *cur = head_;
   while (true) {
     if (actual_value == cur->num_of_less + 1) {
       return *cur->data;
@@ -420,8 +419,8 @@ T RBTree<T>::mth_statistic(size_t stat) const {
 }
 
 template <typename T>
-void RBTree<T>::move_pointers(node*& cur1, node*& cur2, bool& go_again,
-                              const RBTree& another) {
+void RBTree<T>::move_pointers(node *&cur1, node *&cur2, bool &go_again,
+                              const RBTree &another) {
   while (cur2->left != another.nil_ && cur1->left == nil_) {
     cur2 = cur2->left;
     assert(cur1->left);
@@ -440,8 +439,8 @@ void RBTree<T>::move_pointers(node*& cur1, node*& cur2, bool& go_again,
 
 template <typename T>
 void RBTree<T>::delete_tree() {
-  node* cur = head_;
-  node* tmp;
+  node *cur = head_;
+  node *tmp;
   bool go_again = false;
   while (head_ && head_ != nil_) {
     while (cur->left && cur->left != nil_) {
