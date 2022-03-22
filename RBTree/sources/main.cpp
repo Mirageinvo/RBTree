@@ -6,7 +6,7 @@ int main() {
   std::string sign;
   size_t stat;
   int64_t num;
-  Trees::RBTree<int64_t> tree;
+  trees::RBTree<int64_t> tree;
   std::cin >> sign;
   while (!std::cin.eof()) {
     if (sign.size() == 1 && sign == "k") {
