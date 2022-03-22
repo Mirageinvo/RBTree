@@ -22,7 +22,8 @@ Checks: >
   -misc-non-private-member-variables-in-classes,
   -llvm-include-order,
   -llvm-qualified-auto,
-  -readability-qualified-auto
+  -readability-qualified-auto,
+  -bugprone-use-after-move
 WarningsAsErrors: "*"
 
 CheckOptions:
