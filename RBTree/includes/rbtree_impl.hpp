@@ -82,8 +82,7 @@ RBTree<T>::node::~node() {
 }
 
 template <typename T>
-typename RBTree<T>::node &RBTree<T>::node::operator=(
-    const RBTree::node &another) {
+typename RBTree<T>::node &RBTree<T>::node::operator=(const node &another) {
   if (this == &another) {
     return *this;
   }
@@ -107,8 +106,7 @@ typename RBTree<T>::node &RBTree<T>::node::operator=(
 }
 
 template <typename T>
-typename RBTree<T>::node &RBTree<T>::node::operator=(
-    RBTree::node &&another) noexcept {
+typename RBTree<T>::node &RBTree<T>::node::operator=(node &&another) noexcept {
   if (this == &another) {
     return *this;
   }
@@ -399,7 +397,7 @@ T RBTree<T>::mth_statistic(size_t stat) const {
   if (head_ == nullptr || head_ == nil_) {
     throw std::out_of_range("The tree is empty");
   }
-  if (head_->num_of_less + head_->num_of_greater + 1 < stat) {
+  if (stat <= 0 || head_->num_of_less + head_->num_of_greater + 1 < stat) {
     throw std::out_of_range("The value is out of range");
   }
   size_t actual_value = stat;
