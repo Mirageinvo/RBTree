@@ -395,10 +395,10 @@ template <typename T>
 T RBTree<T>::mth_statistic(size_t stat) const {
   assert(head_ && head_->num_of_less + head_->num_of_greater + 1 >= stat);
   if (head_ == nullptr || head_ == nil_) {
-    throw std::out_of_range("The tree is empty");
+    throw std::runtime_error("The tree is empty");
   }
   if (stat <= 0 || head_->num_of_less + head_->num_of_greater + 1 < stat) {
-    throw std::out_of_range("The value is out of range");
+    throw std::runtime_error("The value is out of range");
   }
   size_t actual_value = stat;
   node *cur = head_;
