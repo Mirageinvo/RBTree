@@ -15,11 +15,5 @@ add_custom_target(
     COMMAND clang-format -i ${RBT_FILES}
 )
 
-set(CMAKE_CXX_CLANG_TIDY
-    clang-tidy;
-    --format-style=file;
-    --header-filter=.hpp;
-)
-
 add_subdirectory("RBTree")
 add_subdirectory("tests")
