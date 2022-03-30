@@ -11,8 +11,8 @@ namespace trees {
 template <typename T>
 RBTree<T>::node::node(T el, node *nil, node *par, int col)
     : color(col), left(nil), right(nil), parent(par), data(nullptr) {
+  data = new T;
   try {
-    data = new T;
     *data = el;
   } catch (...) {
     delete data;
@@ -31,8 +31,8 @@ RBTree<T>::node::node(node *el, node *nil, node *par)
       data(nullptr) {
   assert(el);
   if (el && el->data) {
+    data = new T;
     try {
-      data = new T;
       *data = *el->data;
     } catch (...) {
       delete data;
@@ -51,8 +51,8 @@ RBTree<T>::node::node(const node &another)
       parent(another.parent),
       data(nullptr) {
   if (another.data) {
+    data = new T;
     try {
-      data = new T;
       *data = *another.data;
     } catch (...) {
       delete data;
@@ -86,22 +86,27 @@ typename RBTree<T>::node &RBTree<T>::node::operator=(const node &another) {
   if (this == &another) {
     return *this;
   }
+  if (another.data) {
+      T* tmp = new T;
+      try {
+          *tmp = *another.data;
+      }
+      catch (...) {
+          delete tmp;
+          throw;
+      }
+      std::swap(data, tmp);
+      delete tmp;
+  }
+  else {
+      data = nullptr;
+  }
   color = another.color;
   num_of_less = another.num_of_less;
   num_of_greater = another.num_of_greater;
   left = another.left;
   right = another.right;
   parent = another.parent;
-  data = nullptr;
-  if (another.data) {
-    try {
-      data = new T;
-      *data = *another.data;
-    } catch (...) {
-      delete data;
-      throw;
-    }
-  }
   return *this;
 }
 
