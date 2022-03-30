@@ -22,8 +22,10 @@ add_custom_target(
 )
 add_dependencies(run_tests tests)
 
-target_compile_options(tests PUBLIC -fsanitize=address -g)
-set_target_properties(tests PROPERTIES LINK_FLAGS "-fsanitize=address")
+if (ADD_SANITIZERS)
+    target_compile_options(tests PUBLIC -fsanitize=address -g)
+    set_target_properties(tests PROPERTIES LINK_FLAGS "-fsanitize=address")
+endif()
 
 add_custom_target(
     run_all
