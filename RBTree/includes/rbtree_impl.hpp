@@ -329,42 +329,54 @@ bool RBTree<T>::fix_tree(node *init) {
 
 template <typename T>
 void RBTree<T>::insert(T el) {
-  assert(head_);
-  if (head_ == nil_) {
-    head_ = new node(el, nil_);
-    assert(head_->color == BLACK && head_->num_of_less == 0 &&
-           head_->num_of_greater == 0 && head_->parent == nullptr);
-    return;
-  }
-  node *tmp = head_;
-  while (true) {
-    assert(el != *tmp->data);
-    if (el > *tmp->data) {
-      tmp->num_of_greater++;
-      if (tmp->right == nil_) {
-        tmp->right = new node(el, nil_, tmp, RED);
-        tmp = tmp->right;
-        while (!fix_tree(tmp)) {
-          tmp = grandfather(tmp);
+    try {
+        assert(head_);
+        if (head_ == nil_) {
+            node* tmp = new node(el, nil_);
+            head_ = tmp;
+            assert(head_->color == BLACK && head_->num_of_less == 0 &&
+                head_->num_of_greater == 0 && head_->parent == nullptr);
+            return;
         }
-        return;
-      } else {
-        tmp = tmp->right;
-      }
-    } else {
-      tmp->num_of_less++;
-      if (tmp->left == nil_) {
-        tmp->left = new node(el, nil_, tmp, RED);
-        tmp = tmp->left;
-        while (!fix_tree(tmp)) {
-          tmp = grandfather(tmp);
+        node* tmp = head_;
+        while (true) {
+            assert(el != *tmp->data);
+            if (el > *tmp->data) {
+                tmp->num_of_greater++;
+                if (tmp->right == nil_) {
+                    node* tmp2 = new node(el, nil_, tmp, RED);
+                    tmp->right = tmp2;
+                    tmp = tmp->right;
+                    while (!fix_tree(tmp)) {
+                        tmp = grandfather(tmp);
+                    }
+                    return;
+                }
+                else {
+                    tmp = tmp->right;
+                }
+            }
+            else {
+                tmp->num_of_less++;
+                if (tmp->left == nil_) {
+                    node* tmp2 = new node(el, nil_, tmp, RED);
+                    tmp->left = tmp2;
+                    tmp = tmp->left;
+                    while (!fix_tree(tmp)) {
+                        tmp = grandfather(tmp);
+                    }
+                    return;
+                }
+                else {
+                    tmp = tmp->left;
+                }
+            }
         }
-        return;
-      } else {
-        tmp = tmp->left;
-      }
     }
-  }
+    catch (...) {
+        delete_tree();
+        throw;
+    }
 }
 
 template <typename T>
@@ -427,13 +439,15 @@ void RBTree<T>::move_pointers(node *&cur1, node *&cur2, bool &go_again,
   while (cur2->left != another.nil_ && cur1->left == nil_) {
     cur2 = cur2->left;
     assert(cur1->left);
-    cur1->left = new node(cur2, nil_, cur1);
+    node* tmp = new node(cur2, nil_, cur1);
+    cur1->left = tmp;
     cur1 = cur1->left;
   }
   while (cur2->right != another.nil_ && cur1->right == nil_) {
     cur2 = cur2->right;
     assert(cur1->right);
-    cur1->right = new node(cur2, nil_, cur1);
+    node* tmp = new node(cur2, nil_, cur1);
+    cur1->right = tmp;
     cur1 = cur1->right;
     go_again = true;
     break;
