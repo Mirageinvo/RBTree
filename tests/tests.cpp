@@ -7,109 +7,101 @@ const size_t kNum = 1e5;
 const size_t kNumSmall = 5;
 
 struct BadType {
-    BadType() : val(0) {
-        if (counter % 15 == 0) {
-            throw std::runtime_error("Just an error");
-        }
-        ++counter;
+  BadType() : val(0) {
+    if (counter % 15 == 0) {
+      throw std::runtime_error("Just an error");
     }
-    BadType(size_t num) : val(num) {
-        if (counter % 15 == 0) {
-            throw std::runtime_error("Just an error");
-        }
-        ++counter;
+    ++counter;
+  }
+  BadType(size_t num) : val(num) {
+    if (counter % 15 == 0) {
+      throw std::runtime_error("Just an error");
     }
-    BadType(const BadType& another) : val(another.val) {
-        if (counter % 15 == 0) {
-            throw std::runtime_error("Just an error");
-        }
-        ++counter;
+    ++counter;
+  }
+  BadType(const BadType& another) : val(another.val) {
+    if (counter % 15 == 0) {
+      throw std::runtime_error("Just an error");
     }
-    size_t val;
-    static size_t counter;
-    bool operator > (const BadType& another) {
-        ++counter;
-        return val > another.val;
+    ++counter;
+  }
+  size_t val;
+  static size_t counter;
+  bool operator>(const BadType& another) {
+    ++counter;
+    return val > another.val;
+  }
+  bool operator<(const BadType& another) {
+    ++counter;
+    return val < another.val;
+  }
+  bool operator==(const BadType& another) {
+    ++counter;
+    return val == another.val;
+  }
+  bool operator!=(const BadType& another) {
+    ++counter;
+    return !(*this == another);
+  }
+  BadType& operator=(const BadType& another) {
+    if (this == &another) {
+      return *this;
     }
-    bool operator < (const BadType& another) {
-        ++counter;
-        return val < another.val;
+    if (counter % 15 == 0) {
+      throw std::runtime_error("Just an error");
+    } else {
+      ++counter;
+      val = another.val;
     }
-    bool operator == (const BadType& another) {
-        ++counter;
-        return val == another.val;
-    }
-    bool operator != (const BadType& another) {
-        ++counter;
-        return !(*this == another);
-    }
-    BadType& operator = (const BadType& another) {
-        if (this == &another) {
-            return *this;
-        }
-        if (counter % 15 == 0) {
-            throw std::runtime_error("Just an error");
-        }
-        else {
-            ++counter;
-            val = another.val;
-        }
-        return *this;
-    }
+    return *this;
+  }
 };
 size_t BadType::counter = 1;
 
 TEST(RBTree, ExceptionsTest) {
-    trees::RBTree<BadType> tmp_1;
-    for (size_t i = 1; i <= kNum; ++i) {
-        try {
-            tmp_1.insert(BadType(i));
-            ASSERT_TRUE(tmp_1.mth_statistic(i) == BadType(i));
-            ASSERT_TRUE(tmp_1.num_of_less(BadType(i + 1)) == i);
-        }
-        catch (const std::runtime_error& e) {
-            EXPECT_EQ(static_cast<std::string>(e.what()), "Just an error");
-            break;
-        }
-        catch (...) {
-            FAIL();
-        }
-    }
-    trees::RBTree<BadType> tmp_2;
-    for (size_t i = kNum; i >= 1; --i) {
-        try {
-            tmp_2.insert(i);
-            ASSERT_TRUE(tmp_2.mth_statistic(1).val == i);
-            ASSERT_TRUE(tmp_2.num_of_less(BadType(kNum + 1)) == kNum - i + 1);
-        }
-        catch (const std::runtime_error& e) {
-            EXPECT_EQ(static_cast<std::string>(e.what()), "Just an error");
-            break;
-        }
-        catch (...) {
-            FAIL();
-        }
-    }
-    trees::RBTree<BadType> tmp_3;
-    for (size_t i = 0; i < kNumSmall; ++i) {
-        try {
-            BadType::counter = 1;
-            tmp_3.insert(i);
-        }
-        catch (...) {
-            FAIL();
-        }
-    }
-    BadType::counter += 7;
+  trees::RBTree<BadType> tmp_1;
+  for (size_t i = 1; i <= kNum; ++i) {
     try {
-        trees::RBTree<BadType> tmp_4(tmp_3);
+      tmp_1.insert(BadType(i));
+      ASSERT_TRUE(tmp_1.mth_statistic(i) == BadType(i));
+      ASSERT_TRUE(tmp_1.num_of_less(BadType(i + 1)) == i);
+    } catch (const std::runtime_error& e) {
+      EXPECT_EQ(static_cast<std::string>(e.what()), "Just an error");
+      break;
+    } catch (...) {
+      FAIL();
     }
-    catch (const std::runtime_error& e) {
-        EXPECT_EQ(static_cast<std::string>(e.what()), "Just an error");
+  }
+  trees::RBTree<BadType> tmp_2;
+  for (size_t i = kNum; i >= 1; --i) {
+    try {
+      tmp_2.insert(i);
+      ASSERT_TRUE(tmp_2.mth_statistic(1).val == i);
+      ASSERT_TRUE(tmp_2.num_of_less(BadType(kNum + 1)) == kNum - i + 1);
+    } catch (const std::runtime_error& e) {
+      EXPECT_EQ(static_cast<std::string>(e.what()), "Just an error");
+      break;
+    } catch (...) {
+      FAIL();
     }
-    catch (...) {
-        FAIL();
+  }
+  trees::RBTree<BadType> tmp_3;
+  for (size_t i = 0; i < kNumSmall; ++i) {
+    try {
+      BadType::counter = 1;
+      tmp_3.insert(i);
+    } catch (...) {
+      FAIL();
     }
+  }
+  BadType::counter += 7;
+  try {
+    trees::RBTree<BadType> tmp_4(tmp_3);
+  } catch (const std::runtime_error& e) {
+    EXPECT_EQ(static_cast<std::string>(e.what()), "Just an error");
+  } catch (...) {
+    FAIL();
+  }
 }
 
 TEST(RBTreeNode, DefaultAndCopyConstructorTest) {
@@ -448,7 +440,7 @@ TEST(RBTree, EndToEndTestFifth) {
   in_ans.close();
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }

@@ -87,19 +87,17 @@ typename RBTree<T>::node &RBTree<T>::node::operator=(const node &another) {
     return *this;
   }
   if (another.data) {
-      T* tmp = new T;
-      try {
-          *tmp = *another.data;
-      }
-      catch (...) {
-          delete tmp;
-          throw;
-      }
-      std::swap(data, tmp);
+    T *tmp = new T;
+    try {
+      *tmp = *another.data;
+    } catch (...) {
       delete tmp;
-  }
-  else {
-      data = nullptr;
+      throw;
+    }
+    std::swap(data, tmp);
+    delete tmp;
+  } else {
+    data = nullptr;
   }
   color = another.color;
   num_of_less = another.num_of_less;
@@ -329,54 +327,50 @@ bool RBTree<T>::fix_tree(node *init) {
 
 template <typename T>
 void RBTree<T>::insert(T el) {
-    try {
-        assert(head_);
-        if (head_ == nil_) {
-            node* tmp = new node(el, nil_);
-            head_ = tmp;
-            assert(head_->color == BLACK && head_->num_of_less == 0 &&
-                head_->num_of_greater == 0 && head_->parent == nullptr);
-            return;
-        }
-        node* tmp = head_;
-        while (true) {
-            assert(el != *tmp->data);
-            if (el > *tmp->data) {
-                tmp->num_of_greater++;
-                if (tmp->right == nil_) {
-                    node* tmp2 = new node(el, nil_, tmp, RED);
-                    tmp->right = tmp2;
-                    tmp = tmp->right;
-                    while (!fix_tree(tmp)) {
-                        tmp = grandfather(tmp);
-                    }
-                    return;
-                }
-                else {
-                    tmp = tmp->right;
-                }
-            }
-            else {
-                tmp->num_of_less++;
-                if (tmp->left == nil_) {
-                    node* tmp2 = new node(el, nil_, tmp, RED);
-                    tmp->left = tmp2;
-                    tmp = tmp->left;
-                    while (!fix_tree(tmp)) {
-                        tmp = grandfather(tmp);
-                    }
-                    return;
-                }
-                else {
-                    tmp = tmp->left;
-                }
-            }
-        }
+  try {
+    assert(head_);
+    if (head_ == nil_) {
+      node *tmp = new node(el, nil_);
+      head_ = tmp;
+      assert(head_->color == BLACK && head_->num_of_less == 0 &&
+             head_->num_of_greater == 0 && head_->parent == nullptr);
+      return;
     }
-    catch (...) {
-        delete_tree();
-        throw;
+    node *tmp = head_;
+    while (true) {
+      assert(el != *tmp->data);
+      if (el > *tmp->data) {
+        tmp->num_of_greater++;
+        if (tmp->right == nil_) {
+          node *tmp2 = new node(el, nil_, tmp, RED);
+          tmp->right = tmp2;
+          tmp = tmp->right;
+          while (!fix_tree(tmp)) {
+            tmp = grandfather(tmp);
+          }
+          return;
+        } else {
+          tmp = tmp->right;
+        }
+      } else {
+        tmp->num_of_less++;
+        if (tmp->left == nil_) {
+          node *tmp2 = new node(el, nil_, tmp, RED);
+          tmp->left = tmp2;
+          tmp = tmp->left;
+          while (!fix_tree(tmp)) {
+            tmp = grandfather(tmp);
+          }
+          return;
+        } else {
+          tmp = tmp->left;
+        }
+      }
     }
+  } catch (...) {
+    delete_tree();
+    throw;
+  }
 }
 
 template <typename T>
@@ -439,14 +433,14 @@ void RBTree<T>::move_pointers(node *&cur1, node *&cur2, bool &go_again,
   while (cur2->left != another.nil_ && cur1->left == nil_) {
     cur2 = cur2->left;
     assert(cur1->left);
-    node* tmp = new node(cur2, nil_, cur1);
+    node *tmp = new node(cur2, nil_, cur1);
     cur1->left = tmp;
     cur1 = cur1->left;
   }
   while (cur2->right != another.nil_ && cur1->right == nil_) {
     cur2 = cur2->right;
     assert(cur1->right);
-    node* tmp = new node(cur2, nil_, cur1);
+    node *tmp = new node(cur2, nil_, cur1);
     cur1->right = tmp;
     cur1 = cur1->right;
     go_again = true;
