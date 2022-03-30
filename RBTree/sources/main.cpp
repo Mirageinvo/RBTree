@@ -17,7 +17,7 @@ int main() {
       try {
         std::cout << tree.mth_statistic(stat) << std::endl;
       } catch (const std::runtime_error &e) {
-        std::cout << e.what() << std::endl;
+        std::cerr << e.what() << std::endl;
       }
     } else if (sign.size() == 1 && sign == "n") {
       std::cin >> num;
