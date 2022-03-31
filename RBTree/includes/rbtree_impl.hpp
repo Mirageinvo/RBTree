@@ -188,8 +188,8 @@ RBTree<T> &RBTree<T>::operator=(RBTree &&another) noexcept {
   if (this == &another) {
     return *this;
   }
-  std::swap(this->head_, another.head_);
-  std::swap(this->nil_, another.nil_);
+  std::swap(head_, another.head_);
+  std::swap(nil_, another.nil_);
   return *this;
 }
 
@@ -204,14 +204,14 @@ RBTree<T> &RBTree<T>::operator=(const RBTree &another) {
 }
 
 template <typename T>
-typename RBTree<T>::node *RBTree<T>::grandfather(node *init) const {
+typename RBTree<T>::node *RBTree<T>::grandfather(node *init) const noexcept {
   assert(init);
   return (init->parent && init->parent->parent) ? init->parent->parent
                                                 : nullptr;
 }
 
 template <typename T>
-typename RBTree<T>::node *RBTree<T>::uncle(node *init) const {
+typename RBTree<T>::node *RBTree<T>::uncle(node *init) const noexcept {
   assert(init);
   node *grdf = grandfather(init);
   if (grdf == nullptr) {
@@ -225,7 +225,7 @@ typename RBTree<T>::node *RBTree<T>::uncle(node *init) const {
 }
 
 template <typename T>
-void RBTree<T>::rotate_left(node *init) {
+void RBTree<T>::rotate_left(node *init) noexcept {
   assert(init && init != head_);
   if (init->parent == head_) {
     init->parent->right = init->left;
@@ -252,7 +252,7 @@ void RBTree<T>::rotate_left(node *init) {
 }
 
 template <typename T>
-void RBTree<T>::rotate_right(node *init) {
+void RBTree<T>::rotate_right(node *init) noexcept {
   assert(init && init != head_);
   if (init->parent == head_) {
     init->parent->left = init->right;
@@ -375,7 +375,7 @@ void RBTree<T>::insert(T el) {
 
 template <typename T>
 size_t RBTree<T>::num_of_less(T el) const {
-  if (head_ == nil_) {
+  if (head_ == nullptr || head_ == nil_) {
     return 0;
   }
   size_t ans = 0;
@@ -405,10 +405,10 @@ size_t RBTree<T>::num_of_less(T el) const {
 template <typename T>
 T RBTree<T>::mth_statistic(size_t stat) const {
   assert(head_ && head_->num_of_less + head_->num_of_greater + 1 >= stat);
-  if (head_ == nullptr || head_ == nil_) {
-    throw std::runtime_error("The tree is empty");
+  if (head_ == nullptr) {
+    throw std::runtime_error("The tree does not exist");
   }
-  if (stat <= 0 || head_->num_of_less + head_->num_of_greater + 1 < stat) {
+  if (head_ == nil_ || head_->num_of_less + head_->num_of_greater + 1 < stat) {
     throw std::runtime_error("The value is out of range");
   }
   size_t actual_value = stat;

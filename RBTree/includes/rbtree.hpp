@@ -39,10 +39,10 @@ class RBTree final {
   node *nil_;
   node *head_;
   bool fix_tree(node *init);
-  node *grandfather(node *init) const;
-  node *uncle(node *init) const;
-  void rotate_left(node *init);
-  void rotate_right(node *init);
+  node *grandfather(node *init) const noexcept;
+  node *uncle(node *init) const noexcept;
+  void rotate_left(node *init) noexcept;
+  void rotate_right(node *init) noexcept;
   void move_pointers(node *&cur1, node *&cur2, bool &go_again,
                      const RBTree &another);
   void delete_tree();
