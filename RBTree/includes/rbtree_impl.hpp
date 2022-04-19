@@ -10,15 +10,7 @@ namespace trees {
 
 template <typename T>
 RBTree<T>::node::node(T el, node *nil, node *par, int col)
-    : color(col), left(nil), right(nil), parent(par), data(nullptr) {
-  data = new T;
-  try {
-    *data = el;
-  } catch (...) {
-    delete data;
-    throw;
-  }
-}
+    : color(col), left(nil), right(nil), parent(par), data(new T{el}) {}
 
 template <typename T>
 RBTree<T>::node::node(node *el, node *nil, node *par)
