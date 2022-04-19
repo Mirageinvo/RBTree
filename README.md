@@ -19,6 +19,26 @@ To run main program:
 make run_main
 ```
 
+In main program you may use three following commands:
+
+```
+k num -------> to insert a number
+m num -------> to get num-th least element in the tree
+n num -------> to get number of elements less than num
+```
+
+Example of input:
+
+```
+k 8 k 2 k -1 m 1 m 2 n 3
+```
+
+Example of output:
+
+```
+-1 2 2
+```
+
 To run tests:
 
 ```
